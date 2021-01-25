@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Patient;
+use App\Services\PatientService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\{Request, Response};
 
 class PatientController extends Controller
 {
-    public function __construct(){
-        //
+    public function __construct(PatientService $service){
+        $this->service = $service;
     }
 
     public function index(){
         $data = [
-            'data' => Patient::all()
+            'data' => $this->service->getAll()
         ];
         
         return response($data);
@@ -22,7 +22,7 @@ class PatientController extends Controller
 
     public function show(int $id){
         try{
-            $patient = Patient::findOrFail($id);
+            $patient = $this->service->findById($id);
 
             $data = [
                 'data' => $patient
@@ -41,7 +41,7 @@ class PatientController extends Controller
 
     public function store(Request $request){
 
-        $patient = Patient::create($request->all());
+        $patient = $this->service->store($request->all());
 
         $data = [
             'data' => [
@@ -54,9 +54,7 @@ class PatientController extends Controller
 
     public function update(Request $request, int $id){
         try{
-            $patient = Patient::findOrFail($id);
-
-            $patient->update($request->all());
+            $patient = $this->service->update($id, $request->all());
 
             $data = [
                 'data' => [
@@ -79,7 +77,7 @@ class PatientController extends Controller
 
     public function destroy(int $id){
         try{
-            $patient = Patient::findOrFail($id);
+            $patient = $this->service->destroy($id);
 
             $patient->delete();
 
