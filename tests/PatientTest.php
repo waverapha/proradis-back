@@ -7,7 +7,7 @@ use Laravel\Lumen\Testing\{
     DatabaseTransactions
 };
 
-class ExampleTest extends TestCase
+class PatientTest extends TestCase
 {
     use DatabaseTransactions;
 
@@ -24,7 +24,17 @@ class ExampleTest extends TestCase
         $this->seeStatusCode(Response::HTTP_OK);
 
         $this->seeJsonStructure([
-            'data'
+            'data',
+            'meta' => [
+                'pagination' => [
+                    'total',
+                    'count',
+                    'per_page',
+                    'current_page',
+                    'total_pages',
+                    'links'
+                ]
+            ]
         ]);
     }
 
@@ -34,8 +44,13 @@ class ExampleTest extends TestCase
      * @group student.show
      */
     public function testShow(){
+        $id = Patient::select('id')
+        ->inRandomOrder()
+        ->first()
+        ->id;
+
         $this->json('GET', route('patient.show', [
-            'id' => 1
+            'id' => $id
         ]));
 
         $this->seeStatusCode(Response::HTTP_OK);
@@ -79,7 +94,10 @@ class ExampleTest extends TestCase
      * @group student.update
      */
     public function testUpdate(){
-        $id = 2;
+        $id = Patient::select('id')
+        ->inRandomOrder()
+        ->first()
+        ->id;
 
         $payload = Patient::factory()
         ->make()
@@ -112,7 +130,10 @@ class ExampleTest extends TestCase
      * @group student.destroy
      */
     public function testDestroy(){
-        $id = 3;
+        $id = Patient::select('id')
+        ->inRandomOrder()
+        ->first()
+        ->id;
 
         $this->json('DELETE', route('patient.destroy', [
             'id' => $id

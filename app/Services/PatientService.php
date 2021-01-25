@@ -6,9 +6,9 @@ use App\Models\Patient;
 
 class PatientService
 {
-    public function getAll(){
+    public function all($resultsPerPage){
 
-        return Patient::all();
+        return Patient::paginate($resultsPerPage);
     }
 
     public function findById(int $id){

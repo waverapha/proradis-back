@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\PatientService;
+use App\Transformers\PatientTransformer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\{Request, Response};
 
@@ -13,9 +14,9 @@ class PatientController extends Controller
     }
 
     public function index(){
-        $data = [
-            'data' => $this->service->getAll()
-        ];
+        $patients = $this->service->all(self::$resultsPerPage);
+
+        $data = $this->paginate($patients, new PatientTransformer);
         
         return response($data);
     }
@@ -24,9 +25,7 @@ class PatientController extends Controller
         try{
             $patient = $this->service->findById($id);
 
-            $data = [
-                'data' => $patient
-            ];
+            $data = $this->item($patient, new PatientTransformer);
 
             return response($data);
 
@@ -43,11 +42,7 @@ class PatientController extends Controller
 
         $patient = $this->service->store($request->all());
 
-        $data = [
-            'data' => [
-                'id' => $patient->id
-            ]
-        ];
+        $data = $this->item($patient, new PatientTransformer);
 
         return response($data, 201);
     }
@@ -56,19 +51,12 @@ class PatientController extends Controller
         try{
             $patient = $this->service->update($id, $request->all());
 
-            $data = [
-                'data' => [
-                    'id' => $patient->id,
-                    'created_at' => $patient->created_at,
-                    'updated_at' => $patient->updated_at
-                ]
-            ];
-
-            return response($data);
+            return $this->item($patient, new PatientTransformer);
 
         } catch(ModelNotFoundException $e) {
             return response(null, Response::HTTP_NOT_FOUND);
         } catch(\Exception $e) {
+            dd($e->getTrace());
             return response([
                 'message' => $e->getMessage()
             ], Response::HTTP_BAD_REQUEST);
