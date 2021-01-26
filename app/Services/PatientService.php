@@ -6,8 +6,7 @@ use App\Models\Patient;
 
 class PatientService
 {
-    public function all($resultsPerPage){
-
+    public function all(int $resultsPerPage){
         return Patient::paginate($resultsPerPage);
     }
 

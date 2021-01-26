@@ -23,7 +23,7 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
+$app->withFacades();
 
 $app->withEloquent();
 
@@ -95,6 +95,9 @@ $app->configure('cors');
 $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+
+$app->register(Lucascudo\LaravelPtBRLocalization\LaravelPtBRLocalizationServiceProvider::class);
+$app->register(LaravelLegends\PtBrValidator\ValidatorProvider::class);
 
 /*
 |--------------------------------------------------------------------------

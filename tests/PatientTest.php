@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Patient;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Testing\{
     DatabaseMigrations,
@@ -12,6 +13,12 @@ class PatientTest extends TestCase
     use DatabaseTransactions;
 
     private $table = 'patients';
+
+    public function getTestPacientData(){
+        return Patient::factory()
+        ->make()
+        ->toArray();
+    }
 
     /**
      * @group index
@@ -68,9 +75,7 @@ class PatientTest extends TestCase
      * @group student.store
      */
     public function testStore(){
-        $payload = Patient::factory()
-        ->make()
-        ->toArray();
+        $payload = $this->getTestPacientData();
 
         $this->json('POST', route('patient.store'), $payload);
 
@@ -99,9 +104,7 @@ class PatientTest extends TestCase
         ->first()
         ->id;
 
-        $payload = Patient::factory()
-        ->make()
-        ->toArray();
+        $payload = $this->getTestPacientData();
 
         $this->json('PUT', route('patient.update', [
             'id' => $id
@@ -144,6 +147,34 @@ class PatientTest extends TestCase
         $this->notSeeInDatabase('patients', [
             'id' => $id,
             'deleted_at' => null
+        ]);
+    }
+
+    /**
+     * @group validation
+     * @group student
+     * @group student.validation
+     */
+    public function testAssertRequiredData(){
+        $payload = $this->getTestPacientData();
+
+        $lastID = Patient::select('id')
+        ->orderBy('id', 'desc')
+        ->first()
+        ->id;
+
+        foreach ($payload as $key => $value) {
+            $payload[$key] = null;
+        }
+
+        $this->json('POST', route('patient.store'), $payload);
+
+        $this->seeStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+
+        $this->seeJsonStructure(array_keys($payload));
+
+        $this->notSeeInDatabase('patients', [
+            'id' => ($lastID + 1),
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Patient;
 use App\Services\PatientService;
 use App\Transformers\PatientTransformer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -39,6 +40,7 @@ class PatientController extends Controller
     }
 
     public function store(Request $request){
+        $this->validate($request, Patient::rules());
 
         $patient = $this->service->store($request->all());
 
@@ -48,6 +50,8 @@ class PatientController extends Controller
     }
 
     public function update(Request $request, int $id){
+        $this->validate($request, Patient::rules());
+
         try{
             $patient = $this->service->update($id, $request->all());
 
@@ -56,9 +60,8 @@ class PatientController extends Controller
         } catch(ModelNotFoundException $e) {
             return response(null, Response::HTTP_NOT_FOUND);
         } catch(\Exception $e) {
-            dd($e->getTrace());
             return response([
-                'message' => $e->getMessage()
+                'message' => 'Um erro ocorreu! Nossa equipe já foi avisada e está verificando.'
             ], Response::HTTP_BAD_REQUEST);
         }
     }
