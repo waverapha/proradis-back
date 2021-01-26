@@ -14,12 +14,12 @@ class MedicalAppointment extends Model
 
     public static function rules(){
         return [
-            'content' => 'required|string|max:1000',
+            'record' => 'required|string|max:1000',
         ];
     }
     
     protected $fillable = [
-        'content'
+        'record'
     ];
 
     public function patient(){

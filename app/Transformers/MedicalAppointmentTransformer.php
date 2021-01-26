@@ -4,13 +4,13 @@ namespace App\Transformers;
 
 class MedicalAppointmentTransformer extends Transformer
 {
-    public function transform($patient){
+    public function transform($medicalAppointment){
         return [
-            'id' => (int)$patient->id,
-            'content' => $patient->name,
-            'created_at' => $patient->created_at,
-            'updated_at' => $patient->updated_at,
-            'deleted_at' => $patient->deleted_at
+            'id' => (int)$medicalAppointment->id,
+            'record' => $medicalAppointment->record,
+            'created_at' => $medicalAppointment->created_at,
+            'updated_at' => $medicalAppointment->updated_at,
+            'deleted_at' => $medicalAppointment->deleted_at
         ];
     }
 }

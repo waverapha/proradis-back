@@ -22,6 +22,10 @@ class Controller extends BaseController
     {
         $manager = new Manager();
 
+        if (isset($_GET['include'])) {
+            $manager->parseIncludes($_GET['include']);
+        }
+
         return $manager;
     }
 

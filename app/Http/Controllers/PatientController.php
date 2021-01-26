@@ -68,9 +68,7 @@ class PatientController extends Controller
 
     public function destroy(int $id){
         try{
-            $patient = $this->service->destroy($id);
-
-            $patient->delete();
+            $this->service->destroy($id);
 
             return response(null, Response::HTTP_NO_CONTENT);
 

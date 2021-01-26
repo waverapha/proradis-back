@@ -14,19 +14,19 @@ class MedicalAppointmentController extends Controller
         $this->service = $service;
     }
 
-    public function index(){
-        $patients = $this->service->all(self::$resultsPerPage);
+    public function index(int $patient){
+        $medicalAppointments = $this->service->all(self::$resultsPerPage, $patient);
 
-        $data = $this->paginate($patients, new MedicalAppointmentTransformer);
+        $data = $this->paginate($medicalAppointments, new MedicalAppointmentTransformer);
         
         return response($data);
     }
 
-    public function show(int $id){
+    public function show(int $patient, int $id){
         try{
-            $patient = $this->service->findById($id);
+            $medicalAppointment = $this->service->findByIdInPatient($patient, $id);
 
-            $data = $this->item($patient, new MedicalAppointmentTransformer);
+            $data = $this->item($medicalAppointment, new MedicalAppointmentTransformer);
 
             return response($data);
 
@@ -39,21 +39,21 @@ class MedicalAppointmentController extends Controller
         }
     }
 
-    public function store(Request $request){
+    public function store(Request $request, int $patient){
         $this->validate($request, MedicalAppointment::rules());
 
-        $patient = $this->service->store($request->all());
+        $medicalAppointment = $this->service->store($patient, $request->all());
 
-        $data = $this->item($patient, new MedicalAppointmentTransformer);
+        $data = $this->item($medicalAppointment, new MedicalAppointmentTransformer);
 
         return response($data, 201);
     }
 
-    public function update(Request $request, int $id){
+    public function update(Request $request, int $patient, int $id){
         $this->validate($request, MedicalAppointment::rules());
 
         try{
-            $patient = $this->service->update($id, $request->all());
+            $patient = $this->service->update($patient, $id, $request->all());
 
             return $this->item($patient, new MedicalAppointmentTransformer);
 
@@ -66,11 +66,9 @@ class MedicalAppointmentController extends Controller
         }
     }
 
-    public function destroy(int $id){
+    public function destroy(int $patient, int $id){
         try{
-            $patient = $this->service->destroy($id);
-
-            $patient->delete();
+            $patient = $this->service->destroy($patient, $id);
 
             return response(null, Response::HTTP_NO_CONTENT);
 
