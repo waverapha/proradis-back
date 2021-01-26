@@ -42,6 +42,10 @@ class Patient extends Model
         'document'
     ];
 
+    public function medicalAppointments(){
+        return $this->hasMany(MedicalAppointment::class);
+    }
+
     public function setBirthdateAttribute(string $birthdate){
         $this->attributes['birthdate'] = Carbon::createFromFormat('d/m/Y', $birthdate);
     }

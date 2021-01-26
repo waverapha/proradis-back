@@ -1,31 +1,33 @@
 <?php
 
-use App\Models\Patient;
+use App\Models\MedicalAppointment;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Testing\{
     DatabaseMigrations,
     DatabaseTransactions
 };
 
-class PatientTest extends TestCase
+class MedicalAppointmentTest extends TestCase
 {
     use DatabaseTransactions;
 
-    private $table = 'patients';
+    private $table = 'medical_appointments';
 
     public function getTestPacientData(){
-        return Patient::factory()
+        return MedicalAppointment::factory()
         ->make()
         ->toArray();
     }
 
     /**
      * @group index
-     * @group patient
-     * @group patient.index
+     * @group medical-appointment
+     * @group medical-appointment.index
      */
-    public function testIndex(){
-        $this->json('GET', route('patient.index'));
+    public function testIndex(int $patient){
+        $this->json('GET', route('medical-appointment.index', [
+            'patient' => $patient
+        ]));
 
         $this->seeStatusCode(Response::HTTP_OK);
 
@@ -46,16 +48,16 @@ class PatientTest extends TestCase
 
     /**
      * @group show
-     * @group patient
-     * @group patient.show
+     * @group medical-appointment
+     * @group medical-appointment.show
      */
     public function testShow(){
-        $id = Patient::select('id')
+        $id = MedicalAppointment::select('id')
         ->inRandomOrder()
         ->first()
         ->id;
 
-        $this->json('GET', route('patient.show', [
+        $this->json('GET', route('medical-appointment.show', [
             'id' => $id
         ]));
 
@@ -70,13 +72,13 @@ class PatientTest extends TestCase
 
     /**
      * @group store
-     * @group patient
-     * @group patient.store
+     * @group medical-appointment
+     * @group medical-appointment.store
      */
     public function testStore(){
         $payload = $this->getTestPacientData();
 
-        $this->json('POST', route('patient.store'), $payload);
+        $this->json('POST', route('medical-appointment.store'), $payload);
 
         $this->seeStatusCode(Response::HTTP_CREATED);
 
@@ -86,7 +88,7 @@ class PatientTest extends TestCase
             ]
         ]);
 
-        $this->seeInDatabase('patients', [
+        $this->seeInDatabase($this->table, [
             'name' => $payload['name'],
             'document' => $payload['document']
         ]);
@@ -94,18 +96,18 @@ class PatientTest extends TestCase
 
     /**
      * @group update
-     * @group patient
-     * @group patient.update
+     * @group medical-appointment
+     * @group medical-appointment.update
      */
     public function testUpdate(){
-        $id = Patient::select('id')
+        $id = MedicalAppointment::select('id')
         ->inRandomOrder()
         ->first()
         ->id;
 
         $payload = $this->getTestPacientData();
 
-        $this->json('PUT', route('patient.update', [
+        $this->json('PUT', route('medical-appointment.update', [
             'id' => $id
         ]), $payload);
 
@@ -119,7 +121,7 @@ class PatientTest extends TestCase
             ]
         ]);
 
-        $this->seeInDatabase('patients', [
+        $this->seeInDatabase($this->table, [
             'id' => $id,
             'name' => $payload['name'],
             'document' => $payload['document']
@@ -128,22 +130,22 @@ class PatientTest extends TestCase
 
     /**
      * @group destroy
-     * @group patient
-     * @group patient.destroy
+     * @group medical-appointment
+     * @group medical-appointment.destroy
      */
     public function testDestroy(){
-        $id = Patient::select('id')
+        $id = MedicalAppointment::select('id')
         ->inRandomOrder()
         ->first()
         ->id;
 
-        $this->json('DELETE', route('patient.destroy', [
+        $this->json('DELETE', route('medical-appointment.destroy', [
             'id' => $id
         ]));
 
         $this->seeStatusCode(Response::HTTP_NO_CONTENT);
 
-        $this->notSeeInDatabase('patients', [
+        $this->notSeeInDatabase($this->table, [
             'id' => $id,
             'deleted_at' => null
         ]);
@@ -151,13 +153,13 @@ class PatientTest extends TestCase
 
     /**
      * @group validation
-     * @group patient
-     * @group patient.validation
+     * @group medical-appointment
+     * @group medical-appointment.validation
      */
     public function testAssertRequiredData(){
         $payload = $this->getTestPacientData();
 
-        $lastID = Patient::select('id')
+        $lastID = MedicalAppointment::select('id')
         ->orderBy('id', 'desc')
         ->first()
         ->id;
@@ -166,13 +168,13 @@ class PatientTest extends TestCase
             $payload[$key] = null;
         }
 
-        $this->json('POST', route('patient.store'), $payload);
+        $this->json('POST', route('medical-appointment.store'), $payload);
 
         $this->seeStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $this->seeJsonStructure(array_keys($payload));
 
-        $this->notSeeInDatabase('patients', [
+        $this->notSeeInDatabase($this->table, [
             'id' => ($lastID + 1),
         ]);
     }

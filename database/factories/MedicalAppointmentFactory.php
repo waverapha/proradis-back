@@ -3,17 +3,16 @@
 namespace Database\Factories;
 
 use App\Models\MedicalAppointment;
-use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PatientFactory extends Factory
+class MedicalAppointmentFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Patient::class;
+    protected $model = MedicalAppointment::class;
 
     /**
      * Define the model's default state.
@@ -23,10 +22,7 @@ class PatientFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
-            'birthdate' => $this->faker->date('d/m/Y'),
-            'gender' => $this->faker->randomElement(Patient::$genders),
-            'document' => $this->faker->unique()->cpf(false)
+            'record' => $this->faker->text,
         ];
     }
 }
