@@ -42,6 +42,18 @@ class Patient extends Model
         'document'
     ];
 
+    protected static function boot(){
+        parent::boot();
+
+        static::addGlobalScope('order', function($builder){
+            $builder->orderBy('name');
+        });
+    }
+
+    public function medicalAppointments(){
+        return $this->hasMany(MedicalAppointment::class);
+    }
+
     public function setBirthdateAttribute(string $birthdate){
         $this->attributes['birthdate'] = Carbon::createFromFormat('d/m/Y', $birthdate);
     }

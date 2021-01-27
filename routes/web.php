@@ -44,4 +44,34 @@ $router->group([
         'as' => 'patient.destroy',
         'uses' => 'PatientController@destroy'
     ]);
+
+    $router->group([
+        'prefix' => '{patient}/medical-appointments',
+    ], function () use ($router) {
+        $router->get('/', [
+            'as' => 'medical-appointment.index',
+            'uses' => 'MedicalAppointmentController@index'
+        ]);
+    
+        $router->get('/{id}', [
+            'as' => 'medical-appointment.show',
+            'uses' => 'MedicalAppointmentController@show'
+        ]);
+    
+        $router->post('/', [
+            'as' => 'medical-appointment.store',
+            'uses' => 'MedicalAppointmentController@store'
+        ]);
+    
+        $router->put('/{id}', [
+            'as' => 'medical-appointment.update',
+            'uses' => 'MedicalAppointmentController@update'
+        ]);
+    
+        $router->delete('/{id}', [
+            'as' => 'medical-appointment.destroy',
+            'uses' => 'MedicalAppointmentController@destroy'
+        ]);
+    });
 });
+

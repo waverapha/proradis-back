@@ -73,9 +73,9 @@ $app->configure('cors');
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
+$app->middleware([
+    Fruitcake\Cors\HandleCors::class,
+]);
 
 // $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
@@ -96,6 +96,7 @@ $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
+$app->register(Fruitcake\Cors\CorsServiceProvider::class);
 $app->register(Lucascudo\LaravelPtBRLocalization\LaravelPtBRLocalizationServiceProvider::class);
 $app->register(LaravelLegends\PtBrValidator\ValidatorProvider::class);
 

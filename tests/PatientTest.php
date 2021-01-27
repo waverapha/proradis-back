@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Patient;
-use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Laravel\Lumen\Testing\{
     DatabaseMigrations,
@@ -22,8 +21,8 @@ class PatientTest extends TestCase
 
     /**
      * @group index
-     * @group student
-     * @group student.index
+     * @group patient
+     * @group patient.index
      */
     public function testIndex(){
         $this->json('GET', route('patient.index'));
@@ -47,8 +46,8 @@ class PatientTest extends TestCase
 
     /**
      * @group show
-     * @group student
-     * @group student.show
+     * @group patient
+     * @group patient.show
      */
     public function testShow(){
         $id = Patient::select('id')
@@ -71,8 +70,8 @@ class PatientTest extends TestCase
 
     /**
      * @group store
-     * @group student
-     * @group student.store
+     * @group patient
+     * @group patient.store
      */
     public function testStore(){
         $payload = $this->getTestPacientData();
@@ -95,8 +94,8 @@ class PatientTest extends TestCase
 
     /**
      * @group update
-     * @group student
-     * @group student.update
+     * @group patient
+     * @group patient.update
      */
     public function testUpdate(){
         $id = Patient::select('id')
@@ -129,8 +128,8 @@ class PatientTest extends TestCase
 
     /**
      * @group destroy
-     * @group student
-     * @group student.destroy
+     * @group patient
+     * @group patient.destroy
      */
     public function testDestroy(){
         $id = Patient::select('id')
@@ -152,8 +151,8 @@ class PatientTest extends TestCase
 
     /**
      * @group validation
-     * @group student
-     * @group student.validation
+     * @group patient
+     * @group patient.validation
      */
     public function testAssertRequiredData(){
         $payload = $this->getTestPacientData();
