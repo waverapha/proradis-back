@@ -2,22 +2,25 @@
 
 namespace App\Services;
 
-use App\Models\MedicalAppointment;
-use App\Models\Patient;
+use App\Models\{Patient, MedicalAppointment};
 
 class MedicalAppointmentService
 {
-    public function all(int $resultsPerPage, int $patient){
+    public function all(int $resultsPerPage, int $patient = null){
+        if( is_null($patient) ){
+            return MedicalAppointment::paginate($resultsPerPage);
+        }
+
         return Patient::findOrFail($patient)
         ->medicalAppointments()
         ->paginate($resultsPerPage);
     }
 
-    public function findById(int $id){
-        return MedicalAppointment::findOrFail($id);
-    }
+    public function findById(int $id, int $patient = null){
+        if( is_null($patient) ){
+            return MedicalAppointment::findOrFail($id);
+        }
 
-    public function findByIdInPatient(int $patient, int $id){
         return Patient::findOrFail($patient)
         ->medicalAppointments()
         ->findOrFail($id);
@@ -32,7 +35,7 @@ class MedicalAppointmentService
     }
 
     public function update(int $patient, int $id, array $data){
-        $medicalAppointment = $this->findByIdInPatient($patient, $id);
+        $medicalAppointment = $this->findById($id, $patient);
 
         $medicalAppointment->update($data);
 
@@ -40,7 +43,7 @@ class MedicalAppointmentService
     }
 
     public function destroy(int $patient, int $id){
-        $medicalAppointment = $this->findByIdInPatient($patient, $id);
+        $medicalAppointment = $this->findById($id, $patient);
 
         $medicalAppointment->delete();
 

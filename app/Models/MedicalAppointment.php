@@ -22,6 +22,14 @@ class MedicalAppointment extends Model
         'record'
     ];
 
+    protected static function boot(){
+        parent::boot();
+
+        static::addGlobalScope('order', function($builder){
+            $builder->orderBy('created_at', 'desc');
+        });
+    }
+
     public function patient(){
         return $this->belongsTo(Patient::class);
     }

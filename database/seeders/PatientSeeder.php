@@ -19,7 +19,7 @@ class PatientSeeder extends Seeder
         ->count(25)
         ->create()
         ->each(function($patient){
-            $random = random_int(1, 3);
+            $random = random_int(0, 3);
 
             $medicalAppointments = MedicalAppointment::factory()->count($random)->make();
 
