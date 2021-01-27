@@ -42,6 +42,14 @@ class Patient extends Model
         'document'
     ];
 
+    protected static function boot(){
+        parent::boot();
+
+        static::addGlobalScope('order', function($builder){
+            $builder->orderBy('name');
+        });
+    }
+
     public function medicalAppointments(){
         return $this->hasMany(MedicalAppointment::class);
     }
