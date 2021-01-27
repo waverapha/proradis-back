@@ -14,7 +14,7 @@ class MedicalAppointmentController extends Controller
         $this->service = $service;
     }
 
-    public function index(int $patient){
+    public function index(int $patient = null){
         $medicalAppointments = $this->service->all(self::$resultsPerPage, $patient);
 
         $data = $this->paginate($medicalAppointments, new MedicalAppointmentTransformer);
@@ -22,9 +22,9 @@ class MedicalAppointmentController extends Controller
         return response($data);
     }
 
-    public function show(int $patient, int $id){
+    public function show(int $id, int $patient = null){
         try{
-            $medicalAppointment = $this->service->findByIdInPatient($patient, $id);
+            $medicalAppointment = $this->service->findById($id, $patient);
 
             $data = $this->item($medicalAppointment, new MedicalAppointmentTransformer);
 

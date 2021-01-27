@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\MedicalAppointment;
 use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,8 +21,10 @@ class PatientFactory extends Factory
      */
     public function definition()
     {
+        $name = "{$this->faker->firstName()} {$this->faker->lastName()}";
+
         return [
-            'name' => $this->faker->name,
+            'name' => $name,
             'birthdate' => $this->faker->date('d/m/Y'),
             'gender' => $this->faker->randomElement(Patient::$genders),
             'document' => $this->faker->unique()->cpf(false)

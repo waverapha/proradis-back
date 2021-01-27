@@ -15,10 +15,11 @@ class CreateMedicalAppointmentsTable extends Migration
     {
         Schema::create('medical_appointments', function (Blueprint $table) {
             $table->id();
-            $table->text('record');
-
+            
             $table->bigInteger('patient_id')->unsigned()->index();
             $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
+            
+            $table->text('record');
 
             $table->timestamps();
             $table->softDeletes();
