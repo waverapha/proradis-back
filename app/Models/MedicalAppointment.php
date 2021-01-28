@@ -26,7 +26,7 @@ class MedicalAppointment extends Model
         parent::boot();
 
         static::addGlobalScope('order', function($builder){
-            $builder->orderBy('created_at', 'desc');
+            $builder->orderBy('updated_at', 'desc');
         });
     }
 
